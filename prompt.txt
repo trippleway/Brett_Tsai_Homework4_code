@@ -1,0 +1,57 @@
+Q2.2.2 Notes
+
+High-level description:
+The program joins ten short example sentences into a training corpus, creates a
+character vocabulary, and converts overlapping 40-character contexts into
+next-character training examples. It trains an embedding + LSTM + dense-output
+network with sparse categorical cross-entropy. During generation, it repeatedly
+predicts one character, samples from the temperature-scaled probabilities, and
+feeds that character back into the next context.
+
+Demo behavior:
+The demo prints the corpus length, vocabulary, training-example count, and final
+loss. For temperatures 0.1, 0.5, 0.7, and 1.0, it displays the five most likely
+first characters and generates a 180-character sample. Lower temperature makes
+high-probability characters dominate; higher temperature makes less likely
+characters more common and the output more varied. Since the corpus is tiny,
+generated text often resembles the training phrases without always forming
+valid sentences.
+
+Q2.3 Code-generation prompt:
+
+Create a complete, runnable Python program that recreates the character-level
+text-generation demo in tiny_rnn.py. Use TensorFlow/Keras and NumPy, and do not
+download data or use a pretrained model.
+
+The training corpus must contain these ten lines, joined with newline characters:
+I like cats.
+I like dogs.
+I like noodles.
+I like tacos.
+I like books.
+I like robots.
+I like music.
+I like puzzles.
+I like pizza.
+I like coding.
+
+Build a sorted character vocabulary and both character-to-index and
+index-to-character mappings. Make overlapping next-character training examples
+from a context window, then train a small recurrent neural network with an
+embedding layer, an LSTM layer, and a dense output layer. Use integer labels and
+a sparse categorical cross-entropy loss from logits.
+
+After training, print the corpus length, vocabulary, number of training samples,
+and final training loss. Implement autoregressive generation: at every step,
+predict the next character from the most recent context window, divide logits by
+temperature, apply softmax, sample one character, and append it to the context.
+For temperature <= 0, choose the highest-logit character instead. Also print the
+five most likely next characters and their probabilities for the initial prompt.
+Run the demo at temperatures 0.1, 0.5, 0.7, and 1.0 and print a generated sample
+for each. Use a fixed random seed so repeated runs can be compared.
+
+Revision request for generated_v2.py: make the demo especially comparable to the
+starter by using a 40-character context, embedding size 32, LSTM size 128, Adam
+learning rate 0.01, batch size 64, 20 epochs, a 180-character sample, and the
+initial prompt "I like ". Keep the four temperatures and top-five probability
+display. Make the code readable and runnable as a standalone script.
